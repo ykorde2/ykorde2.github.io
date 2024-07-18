@@ -653,7 +653,7 @@ async function renderFifthChart() {
         .style("padding", "10px")
         .style("color", "white")
         .style("width", "150px")
-        .style("height", "50px");
+        .style("height", "150px");
 
     // Add dots
         svg.append('g')
