@@ -569,7 +569,7 @@ async function renderFifthChart() {
         width = 1000 - margin.left - margin.right,
         height = 800 - margin.top - margin.bottom;
     const data = await d3.csv("https://ykorde2.github.io/data/change-heat-deaths-gdp.csv");  // Update with the URL or path to your new CSV file
-    const year = 2022;  // Considering GDP per capita in 2022
+    const year = 2015;  // Considering GDP per capita in 2022
     const filteredData = data.filter(function (d) {
         return d.Year == year && d.HeatDeath != "" && d.GDP != "";
     });
