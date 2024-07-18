@@ -612,16 +612,17 @@ async function renderFifthChart() {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // Add X axis
-    const x = d3.scaleLinear()
+    const x = d3.scaleLog()
         .domain([1000, 70000])  // Adjust domain as necessary
-        .range([0, width]);
+        .range([0, width])
+        .base(10);
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x).tickFormat(d => d + " $/yr"));
+        .call(d3.axisBottom(x).tickFormat(d => d + " $/yr").ticks(10, ",.1s"));
 
     // Add Y axis
     const y = d3.scaleLinear()
-        .domain([-5, 5])  // Adjust domain as necessary
+        .domain([-60, 40])  // Adjust domain as necessary
         .range([height, 0]);
     svg.append("g")
         .call(d3.axisLeft(y).tickFormat(d => d + " %"));
@@ -656,7 +657,7 @@ async function renderFifthChart() {
         .attr("cy", function (d) {
             return y(Number(d.HeatDeath));
         })
-        .attr("r", 20)  // Fixed bubble size, you can adjust or make dynamic based on data
+        .attr("r", 5)  // Fixed bubble size, you can adjust or make dynamic based on data
         .on("mouseover", function (event, d) {
             tooltip.transition()
                 .duration(200)
