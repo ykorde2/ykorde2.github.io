@@ -625,7 +625,7 @@ async function renderFifthChart() {
         .attr("cy", function (d) {
             return y(Number(d.HeatDeath));
         })
-        .attr("r", 5)  // Fixed bubble size, you can adjust or make dynamic based on data
+        .attr("r", 20)  // Fixed bubble size, you can adjust or make dynamic based on data
         .on("mouseover", function (event, d) {
             tooltip.transition()
                 .duration(200)
