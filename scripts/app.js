@@ -616,9 +616,12 @@ async function renderFifthChart() {
         .domain([1000, 70000])  // Adjust domain as necessary
         .range([0, width])
         .base(10);
-    svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x).tickFormat(d => d + " $/yr"));
+        const xTicks = [1000, 2000, 5000, 10000, 20000, 50000, 100000];
+        svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x)
+            .tickValues(xTicks)
+            .tickFormat(d3.format("$.0f")));  // Format tick labels with dollar sign and no decimals
 
     // Add Y axis
     const y = d3.scaleLinear()
@@ -663,8 +666,8 @@ async function renderFifthChart() {
                 .duration(200)
                 .style("opacity", .9);
             tooltip.html(fifthChartTooltipHTML(d));
-            tooltip.style("left", (event.pageX) + "px")
-                .style("top", (event.pageY - 28) + "px")
+            tooltip.style("left", (event.pageX + 15) + "px")
+                .style("top", (event.pageY - 28) + "px");
         })
         .on("mouseout", function (d) {
             tooltip.transition()
