@@ -613,7 +613,7 @@ async function renderFifthChart() {
 
     // Add X axis
     const x = d3.scaleLog()
-        .domain([1000, 70000])  // Adjust domain as necessary
+        .domain([1000, 120000])  // Adjust domain as necessary
         .range([0, width])
         .base(10);
         const xTicks = [1000, 2000, 5000, 10000, 20000, 50000, 100000];
@@ -634,6 +634,14 @@ async function renderFifthChart() {
     const myColor = d3.scaleOrdinal()
         .domain(getContinentKeys())  // Define your function to get continent keys
         .range(d3.schemeSet2);
+
+    svg.append("line")
+        .attr("x1", 0)
+        .attr("x2", width)
+        .attr("y1", y(0))
+        .attr("y2", y(0))
+        .attr("stroke", "black")
+        .attr("stroke-width", 1);
 
     // -1- Create a tooltip div that is hidden by default:
     const tooltip = d3.select("#slide-5")
@@ -666,8 +674,8 @@ async function renderFifthChart() {
                 .duration(200)
                 .style("opacity", .9);
             tooltip.html(fifthChartTooltipHTML(d));
-            tooltip.style("left", (event.pageX + 15) + "px")
-                .style("top", (event.pageY - 28) + "px");
+            tooltip.style("left", (event.pageX + 14) + "px")
+                .style("top", (event.pageY - 56) + "px");
         })
         .on("mouseout", function (d) {
             tooltip.transition()
