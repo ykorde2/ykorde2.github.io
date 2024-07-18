@@ -653,7 +653,7 @@ async function renderFifthChart() {
         .style("padding", "10px")
         .style("color", "white")
         .style("width", "150px")
-        .style("height", "150px");
+        .style("height", "100px");
 
     // Add dots
         svg.append('g')
@@ -674,8 +674,8 @@ async function renderFifthChart() {
                 .duration(200)
                 .style("opacity", .9);
             tooltip.html(fifthChartTooltipHTML(d));
-            tooltip.style("left", (event.pageX + 14) + "px")
-                .style("top", (event.pageY - 56) + "px");
+            tooltip.style("left", (event.pageX + 28) + "px")
+                .style("top", (event.pageY) + "px");
         })
         .on("mouseout", function (d) {
             tooltip.transition()
@@ -685,6 +685,7 @@ async function renderFifthChart() {
         .style("fill", function (d) {
             return myColor(d.Continent);
         });
+        renderLegend(svg, getContinentKeys(), width, myColor);
 }
 
 function fifthChartTooltipHTML(d) {
