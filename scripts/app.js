@@ -570,9 +570,33 @@ async function renderFifthChart() {
         height = 800 - margin.top - margin.bottom;
     const data = await d3.csv("https://ykorde2.github.io/data/change-heat-deaths-gdp.csv");  // Update with the URL or path to your new CSV file
     const year = 2015;  // Considering GDP per capita in 2022
-    const filteredData = data.filter(function (d) {
-        return d.Year == year && d.HeatDeath != "" && d.GDP != "";
+    // Filter data for required years
+    const data2021 = data.filter(d => d.Year == 2021);
+    const data2030 = data.filter(d => d.Year == 2030);
+    const data2015 = data.filter(d => d.Year == 2015);
+
+    // Create a mapping of entity codes to their respective data
+    const dataMap = {};
+
+    data2021.forEach(d => {
+        if (!dataMap[d.Code]) dataMap[d.Code] = {};
+        dataMap[d.Code].GDP = d.GDP;
     });
+
+    data2030.forEach(d => {
+        if (!dataMap[d.Code]) dataMap[d.Code] = {};
+        dataMap[d.Code].HeatDeath = d.HeatDeath;
+    });
+
+    data2015.forEach(d => {
+        if (!dataMap[d.Code]) dataMap[d.Code] = {};
+        dataMap[d.Code].Continent = d.Continent;
+    });
+
+    // Filter and prepare the final data
+    const filteredData = Object.keys(dataMap)
+        .map(code => ({ Code: code, ...dataMap[code] }))
+        .filter(d => d.GDP && d.HeatDeath && d.Continent);
 
     console.log(filteredData);  // Log filtered data to the console
 
