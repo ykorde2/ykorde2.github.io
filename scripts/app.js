@@ -572,6 +572,8 @@ async function renderFifthChart() {
         return d.Year == year && d.HeatDeath != "" && d.GDP != "";
     });
 
+    console.log(filteredData);  // Log filtered data to the console
+
     let svg = d3.select("#chart-5").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
