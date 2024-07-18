@@ -571,9 +571,13 @@ async function renderFifthChart() {
     const data = await d3.csv("https://ykorde2.github.io/data/change-heat-deaths-gdp.csv");  // Update with the URL or path to your new CSV file
     const year = 2015;  // Considering GDP per capita in 2022
     // Filter data for required years
+    console.log(data);  // Log filtered data to the console
     const data2021 = data.filter(d => d.Year == 2021);
     const data2030 = data.filter(d => d.Year == 2030);
     const data2015 = data.filter(d => d.Year == 2015);
+    console.log(data2021);  // Log filtered data to the console
+    console.log(data2030);  // Log filtered data to the console
+    console.log(data2015);  // Log filtered data to the console
 
     // Create a mapping of entity codes to their respective data
     const dataMap = {};
