@@ -562,4 +562,89 @@ function getEntities() {
         "Sweden", "Switzerland", "Taiwan", "Thailand", "Trinidad and Tobago", "Turkey", "United Kingdom", "United States", "Uruguay", "Venezuela", "Vietnam"]
 }
 
+async function renderFifthChart() {
+    const margin = {top: 10, right: 20, bottom: 30, left: 50},
+        width = 1000 - margin.left - margin.right,
+        height = 800 - margin.top - margin.bottom;
+    const data = await d3.csv("https://ykorde2.github.io/data/change-heat-deaths-gdp.csv");  // Update with the URL or path to your new CSV file
+    const year = 2022;  // Considering GDP per capita in 2022
+    const filteredData = data.filter(function (d) {
+        return d.Year == year && d["Heat-related death rate"] != "" && d["GDP per capita, PPP (constant 2017 international $)"] != "";
+    });
+
+    let svg = d3.select("#chart-2").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    // Add X axis
+    const x = d3.scaleLinear()
+        .domain([1000, 70000])  // Adjust domain as necessary
+        .range([0, width]);
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x).tickFormat(d => d + " $/yr"));
+
+    // Add Y axis
+    const y = d3.scaleLinear()
+        .domain([-5, 5])  // Adjust domain as necessary
+        .range([height, 0]);
+    svg.append("g")
+        .call(d3.axisLeft(y).tickFormat(d => d + " %"));
+
+    // Add a scale for bubble color
+    const myColor = d3.scaleOrdinal()
+        .domain(getContinentKeys())  // Define your function to get continent keys
+        .range(d3.schemeSet2);
+
+    // -1- Create a tooltip div that is hidden by default:
+    const tooltip = d3.select("#slide-2")
+        .append("div")
+        .style("opacity", 0)
+        .attr("class", "tooltip")
+        .style("background-color", "black")
+        .style("border-radius", "5px")
+        .style("padding", "10px")
+        .style("color", "white")
+        .style("width", "150px")
+        .style("height", "50px");
+
+    // Add dots
+    svg.append('g')
+        .selectAll("scatterplot-dot")
+        .data(filteredData)
+        .enter()
+        .append("circle")
+        .attr("class", "bubbles")
+        .attr("cx", function (d) {
+            return x(Number(d["GDP per capita, PPP (constant 2017 international $)"]));
+        })
+        .attr("cy", function (d) {
+            return y(Number(d["Heat-related death rate"]));
+        })
+        .attr("r", 5)  // Fixed bubble size, you can adjust or make dynamic based on data
+        .on("mouseover", function (event, d) {
+            tooltip.transition()
+                .duration(200)
+                .style("opacity", .9);
+            tooltip.html(secondChartTooltipHTML(d));
+            tooltip.style("left", (event.pageX) + "px")
+                .style("top", (event.pageY - 28) + "px")
+        })
+        .on("mouseout", function (d) {
+            tooltip.transition()
+                .duration(500)
+                .style("opacity", 0);
+        })
+        .style("fill", function (d) {
+            return myColor(d.Continent);
+        });
+}
+
+function fifthChartTooltipHTML(d) {
+    return "<strong>Entity:</strong> " + d.Entity + "<br>"
+         + "<strong>Heat-related death rate:</strong> " + d["Heat-related death rate"] + "%<br>"
+         + "<strong>GDP per capita:</strong> " + d["GDP per capita, PPP (constant 2017 international $)"] + "$";
+}
 
