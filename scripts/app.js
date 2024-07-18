@@ -572,7 +572,7 @@ async function renderFifthChart() {
         return d.Year == year && d["Heat-related death rate"] != "" && d["GDP per capita, PPP (constant 2017 international $)"] != "";
     });
 
-    let svg = d3.select("#chart-2").append("svg")
+    let svg = d3.select("#chart-5").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
@@ -599,7 +599,7 @@ async function renderFifthChart() {
         .range(d3.schemeSet2);
 
     // -1- Create a tooltip div that is hidden by default:
-    const tooltip = d3.select("#slide-2")
+    const tooltip = d3.select("#slide-3")
         .append("div")
         .style("opacity", 0)
         .attr("class", "tooltip")
