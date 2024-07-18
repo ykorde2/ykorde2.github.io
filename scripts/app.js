@@ -585,6 +585,7 @@ async function renderFifthChart() {
     data2021.forEach(d => {
         if (!dataMap[d.Code]) dataMap[d.Code] = {};
         dataMap[d.Code].GDP = d.GDP;
+        dataMap[d.Code].Entity = d.Entity;
     });
 
     data2030.forEach(d => {
@@ -600,7 +601,7 @@ async function renderFifthChart() {
     // Filter and prepare the final data
     const filteredData = Object.keys(dataMap)
         .map(code => ({ Code: code, ...dataMap[code] }))
-        .filter(d => d.GDP && d.HeatDeath && d.Continent);
+        .filter(d => d.Entity && d.GDP && d.HeatDeath && d.Continent);
 
     console.log(filteredData);  // Log filtered data to the console
 
@@ -676,7 +677,7 @@ async function renderFifthChart() {
 
 function fifthChartTooltipHTML(d) {
     return "<strong>Entity:</strong> " + d.Entity + "<br>"
-         + "<strong>Heat-related death rate:</strong> " + d["Heat-related death rate"] + "%<br>"
-         + "<strong>GDP per capita:</strong> " + d["GDP per capita, PPP (constant 2017 international $)"] + "$";
+         + "<strong>Heat-related death rate:</strong> " + d.HeatDeath + "%<br>"
+         + "<strong>GDP per capita:</strong> " + d.GDP + "$";
 }
 
