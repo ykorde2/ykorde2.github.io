@@ -618,7 +618,7 @@ async function renderFifthChart() {
         .base(10);
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x).tickFormat(d => d + " $/yr").ticks(10, ",.1s"));
+        .call(d3.axisBottom(x).tickFormat(d => d + " $/yr"));
 
     // Add Y axis
     const y = d3.scaleLinear()
