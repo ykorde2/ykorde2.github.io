@@ -1,4 +1,4 @@
-Entity,Code,Year,Heat-related death rate,"GDP per capita, PPP (constant 2017 international $)",Continent
+Entity,Code,Year,HeatDeath,GDP,Continent
 Abkhazia,OWID_ABK,2015,,,Asia
 Afghanistan,AFG,2030,-2.5310047,,
 Afghanistan,AFG,2050,-2.7535765,,

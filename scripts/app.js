@@ -569,7 +569,7 @@ async function renderFifthChart() {
     const data = await d3.csv("https://ykorde2.github.io/data/change-heat-deaths-gdp.csv");  // Update with the URL or path to your new CSV file
     const year = 2022;  // Considering GDP per capita in 2022
     const filteredData = data.filter(function (d) {
-        return d.Year == year && d["Heat-related death rate"] != "" && d["GDP per capita, PPP (constant 2017 international $)"] != "";
+        return d.Year == year && d.HeatDeath != "" && d.GDP != "";
     });
 
     let svg = d3.select("#chart-5").append("svg")
@@ -599,7 +599,7 @@ async function renderFifthChart() {
         .range(d3.schemeSet2);
 
     // -1- Create a tooltip div that is hidden by default:
-    const tooltip = d3.select("#slide-3")
+    const tooltip = d3.select("#slide-5")
         .append("div")
         .style("opacity", 0)
         .attr("class", "tooltip")
@@ -611,24 +611,24 @@ async function renderFifthChart() {
         .style("height", "50px");
 
     // Add dots
-    svg.append('g')
+        svg.append('g')
         .selectAll("scatterplot-dot")
         .data(filteredData)
         .enter()
         .append("circle")
         .attr("class", "bubbles")
         .attr("cx", function (d) {
-            return x(Number(d["GDP per capita, PPP (constant 2017 international $)"]));
+            return x(Number(d.GDP));
         })
         .attr("cy", function (d) {
-            return y(Number(d["Heat-related death rate"]));
+            return y(Number(d.HeatDeath));
         })
         .attr("r", 5)  // Fixed bubble size, you can adjust or make dynamic based on data
         .on("mouseover", function (event, d) {
             tooltip.transition()
                 .duration(200)
                 .style("opacity", .9);
-            tooltip.html(secondChartTooltipHTML(d));
+            tooltip.html(fifthChartTooltipHTML(d));
             tooltip.style("left", (event.pageX) + "px")
                 .style("top", (event.pageY - 28) + "px")
         })
