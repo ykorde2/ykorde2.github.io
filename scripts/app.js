@@ -566,7 +566,7 @@ function getEntities() {
 
 async function renderFifthChart() {
     const margin = {top: 10, right: 20, bottom: 30, left: 50},
-        width = 500 - margin.left - margin.right,
+        width = 1000 - margin.left - margin.right,
         height = 800 - margin.top - margin.bottom;
     const data = await d3.csv("https://ykorde2.github.io/data/change-heat-deaths-gdp.csv");  // Update with the URL or path to your new CSV file
     const year = 2015;  // Considering GDP per capita in 2022
