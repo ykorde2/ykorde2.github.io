@@ -195,7 +195,7 @@ function firstChartTooltipHTML(object) {
 }
 
 function countryCodesToAnnotate() {
-    return ["MMR", "FRA", "USA"]
+    return ["AFG", "FRA", "USA"]
 }
 
 // Second Slide
@@ -686,11 +686,50 @@ async function renderFifthChart() {
             return myColor(d.Continent);
         });
         renderLegend(svg, getContinentKeys(), width, myColor);
+        countryCodesToAnnotate().forEach(function (countryCode) {
+            for (let i = 0; i < filteredData.length; i++) {
+                if (filteredData[i].Code === countryCode) {
+                    const countryData = filteredData[i];
+                    renderFifthChartAnnotations(countryData, x(Number(countryData.GDP)), y(Number(countryData.HeatDeath)), margin);
+                }
+            }
+        });
 }
 
 function fifthChartTooltipHTML(d) {
     return "<strong>Entity:</strong> " + d.Entity + "<br>"
          + "<strong>Heat-related death rate:</strong> " + Number(d.HeatDeath).toFixed(2) + "%<br>"
          + "<strong>GDP per capita ($):</strong> " + d.GDP;
+}
+
+function renderFifthChartAnnotations(d, x, y, margin) {
+    const computedDX = d.Entity === "France" ? -30 : 30;
+    const computedDY = d.Entity === "France" ? 30 : -30;
+    const annotations = [
+        {
+            note: {
+                label: "GDP: $" + Math.round(d.GDP) + ", Heat Death: " + Math.round(d.HeatDeath) + "%",
+                lineType: "none",
+                bgPadding: { "top": 15, "left": 10, "right": 10, "bottom": 10 },
+                title: d.Entity,
+                orientation: "leftRight",
+                "align": "middle"
+            },
+            type: d3.annotationCallout,
+            subject: { radius: 30 },
+            x: x,
+            y: y,
+            dx: computedDX,
+            dy: computedDY
+        },
+    ];
+    const makeAnnotations = d3.annotation().annotations(annotations);
+
+    d3.select("svg")
+        .append("g")
+        .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")")
+        .attr("class", "annotation-group")
+        .call(makeAnnotations);
 }
 
