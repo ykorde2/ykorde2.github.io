@@ -690,7 +690,7 @@ async function renderFifthChart() {
 
 function fifthChartTooltipHTML(d) {
     return "<strong>Entity:</strong> " + d.Entity + "<br>"
-         + "<strong>Heat-related death rate:</strong> " + d.HeatDeath + "%<br>"
-         + "<strong>GDP per capita:</strong> " + d.GDP + "$";
+         + "<strong>Heat-related death rate:</strong> " + Number(d.HeatDeath).toFixed(2) + "%<br>"
+         + "<strong>GDP per capita ($):</strong> " + d.GDP;
 }
 
