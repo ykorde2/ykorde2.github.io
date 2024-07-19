@@ -613,7 +613,7 @@ async function renderFifthChart() {
 
     // Add X axis
     const x = d3.scaleLog()
-        .domain([0, 120000])  // Adjust domain as necessary
+        .domain([100, 120000])  // Adjust domain as necessary
         .range([0, width])
         .base(10);
         const xTicks = [1000, 2000, 5000, 10000, 20000, 50000, 100000];
