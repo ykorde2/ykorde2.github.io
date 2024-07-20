@@ -625,7 +625,7 @@ async function renderFifthChart() {
 
     // Add Y axis
     const y = d3.scaleLinear()
-        .domain([-60, 40])  // Adjust domain as necessary
+        .domain([-80, 40])  // Adjust domain as necessary
         .range([height, 0]);
     svg.append("g")
         .call(d3.axisLeft(y).tickFormat(d => d + " %"));
@@ -731,5 +731,83 @@ function renderFifthChartAnnotations(d, x, y, margin) {
             "translate(" + margin.left + "," + margin.top + ")")
         .attr("class", "annotation-group")
         .call(makeAnnotations);
+}
+
+async function renderHeatDeathRateChart() {
+    const margin = {top: 10, right: 20, bottom: 30, left: 50},
+        width = 800 - margin.left - margin.right,
+        height = 600 - margin.top - margin.bottom;
+
+    const data = await d3.csv("https://ykorde2.github.io/data/change-heat-deaths-rate.csv");
+
+    const svg = d3.select("#chart-3")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    const filteredData = data.filter(d => d.HeatDeathRate != "" && d.Year != "");
+
+    const entities = Array.from(new Set(filteredData.map(d => d.Entity)));
+    
+    d3.select("#select-country")
+        .selectAll('country-options')
+        .data(entities)
+        .enter()
+        .append('option')
+        .text(d => d)
+        .attr("value", d => d);
+
+    const myColor = d3.scaleOrdinal()
+        .domain(entities)
+        .range(d3.schemeSet2);
+
+    const x = d3.scaleLinear()
+        .domain([2030, 2090])
+        .range([0, width]);
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x).tickFormat(d3.format("d")));
+
+    const y = d3.scaleLinear()
+        .domain([-100, 50]) // Adjust the range based on your data
+        .range([height, 0]);
+    svg.append("g")
+        .call(d3.axisLeft(y).tickFormat(d => d + " rate"));
+
+    const firstCountryData = filteredData.filter(d => d.Entity === entities[0]);
+    const line = svg
+        .append('g')
+        .append("path")
+        .attr("id", "line-" + entities[0])
+        .datum(firstCountryData)
+        .attr("d", d3.line()
+            .x(d => x(Number(d.Year)))
+            .y(d => y(Number(d.HeatDeathRate)))
+        )
+        .attr("stroke", myColor(entities[0]))
+        .style("stroke-width", 4)
+        .style("fill", "none");
+
+    function update(selectedGroup) {
+        const countryData = filteredData.filter(d => d.Entity === selectedGroup);
+
+        line
+            .datum(countryData)
+            .transition()
+            .duration(1000)
+            .attr("id", "line-" + selectedGroup)
+            .attr("d", d3.line()
+                .x(d => x(Number(d.Year)))
+                .y(d => y(Number(d.HeatDeathRate)))
+            )
+            .attr("stroke", myColor(selectedGroup));
+    }
+
+    d3.select("#select-country").on("change", function() {
+        const selectedOption = d3.select(this).property("value");
+        update(selectedOption);
+    });
 }
 
