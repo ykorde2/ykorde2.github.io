@@ -738,7 +738,7 @@ async function renderHeatDeathRateChart() {
         width = 800 - margin.left - margin.right,
         height = 600 - margin.top - margin.bottom;
 
-    const data = await d3.csv("https://ykorde2.github.io/data/change-heat-deaths-rate.csv");
+    const data = await d3.csv("https://ykorde2.github.io/data/change-heat-death-rate.csv");
 
     const svg = d3.select("#chart-3")
         .append("svg")
