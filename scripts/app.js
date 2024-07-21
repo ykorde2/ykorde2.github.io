@@ -790,6 +790,9 @@ async function renderHeatDeathRateChart() {
         .style("stroke-width", 4)
         .style("fill", "none");
 
+        const mostRecentFirstCountryData = firstCountryData[firstCountryData.length - 1];
+        renderHeatDeathRateAnnotations(mostRecentFirstCountryData, x(Number(mostRecentFirstCountryData.Year)) - 10, y(Number(mostRecentFirstCountryData.HeatDeathRate)) - 10, margin);
+
     function update(selectedGroup) {
         const countryData = filteredData.filter(d => d.Entity === selectedGroup);
 
@@ -803,11 +806,45 @@ async function renderHeatDeathRateChart() {
                 .y(d => y(Number(d.HeatDeathRate)))
             )
             .attr("stroke", myColor(selectedGroup));
+
+        const finalCountryData = countryData[countryData.length - 1];
+        renderHeatDeathRateAnnotations(finalCountryData, x(Number(finalCountryData.Year)) - 10, y(Number(finalCountryData.HeatDeathRate)) - 10, margin);
     }
 
     d3.select("#select-country").on("change", function() {
         const selectedOption = d3.select(this).property("value");
         update(selectedOption);
     });
+
+}
+
+function renderHeatDeathRateAnnotations(d, x, y, margin) {
+    d3.select(".annotation-group").remove();
+    const annotations = [
+        {
+            note: {
+                label: "Heat death rate is " + d.HeatDeathRate,
+                lineType: "none",
+                bgPadding: {"top": 15, "left": 10, "right": 10, "bottom": 10},
+                title: d.Entity,
+                orientation: "topBottom",
+                align: "top"
+            },
+            type: d3.annotationCalloutCircle,
+            subject: {radius: 30},
+            x: x,
+            y: y,
+            dx: -100,
+            dy: -10
+        },
+    ];
+    const makeAnnotations = d3.annotation().annotations(annotations);
+    const chart = d3.select("svg")
+    chart.transition()
+        .duration(1000);
+    chart.append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .attr("class", "annotation-group")
+        .call(makeAnnotations);
 }
 
