@@ -771,7 +771,7 @@ async function renderHeatDeathRateChart() {
         .call(d3.axisBottom(x).tickFormat(d3.format("d")));
 
     const y = d3.scaleSqrt()
-        .domain([-300, 60])
+        .domain([-300, 100])
         .range([height, 0]);
     svg.append("g")
         .call(d3.axisLeft(y).tickFormat(d => d + " rate"));
