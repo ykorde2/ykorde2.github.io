@@ -873,97 +873,277 @@ async function renderHeatDeathRateChart2() {
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    const subgroups = ["extremeCold", "moderateCold", "moderateHeat", "extremeHeat"];
+        // Define the subgroups
+        const subgroups = ["extremeCold", "moderateCold", "moderateHeat", "extremeHeat"];
 
-    const groups = data.map(d => d.entity);
+        // Extract the groups (country names)
+        const groups = data.map(d => d.entity);
+    
+        // Create the x-axis scale (percentage of deaths)
+        const x = d3.scaleLinear()
+            .domain([0, d3.max(data, d => +d.total)])
+            .range([0, width]);
+    
+        // Create the y-axis scale (countries)
+        const y = d3.scaleBand()
+            .domain(groups)
+            .range([0, height])
+            .padding(0.1);
+    
+        // Define the color scale using d3.schemeSet2
+        const color = d3.scaleOrdinal()
+            .domain(subgroups)
+            .range(d3.schemeSet2);
+    
+        // Add the x-axis to the SVG
+        svg.append("g")
+            .attr("class", "x-axis")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(x).ticks(10).tickFormat(d => d + "%"));
+    
+        // Add the y-axis to the SVG
+        svg.append("g")
+            .attr("class", "y-axis")
+            .call(d3.axisLeft(y));
+    
+        // Prepare the data for the stacked bar chart
+        const stackedData = d3.stack()
+            .keys(subgroups)
+            (data);
+    
+        // Create a tooltip for displaying information on hover
+        const tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+    
+        // Draw the bars for the stacked chart
+        svg.append("g")
+            .selectAll("g")
+            .data(stackedData)
+            .enter()
+            .append("g")
+            .attr("fill", d => color(d.key))
+            .selectAll("rect")
+            .data(d => d)
+            .enter()
+            .append("rect")
+            .attr("y", d => y(d.data.entity))
+            .attr("x", d => x(d[0]))
+            .attr("width", d => x(d[1]) - x(d[0]))
+            .attr("height", y.bandwidth())
+            .on("mouseover", function(event, d) {
+                const total = d.data.total + "%";
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html(`<div class="tooltip-title">${d.data.entity}</div>
+                              Extreme Cold: ${d.data.extremeCold}%<br>
+                              Moderate Cold: ${d.data.moderateCold}%<br>
+                              Moderate Heat: ${d.data.moderateHeat}%<br>
+                              Extreme Heat: ${d.data.extremeHeat}%<br>
+                              <strong>Total: ${total}</strong>`)
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function() {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
+    
+        // Add a legend to the chart
+        const legend = svg.append("g")
+            .attr("transform", `translate(${width - 100},${0})`);
+    
+        // Draw rectangles for the legend
+        legend.selectAll("rect")
+            .data(subgroups)
+            .enter()
+            .append("rect")
+            .attr("x", 0)
+            .attr("y", (d, i) => i * 20)
+            .attr("width", 18)
+            .attr("height", 18)
+            .attr("fill", color);
+    
+        // Add text labels to the legend
+        legend.selectAll("text")
+            .data(subgroups)
+            .enter()
+            .append("text")
+            .attr("x", 25)
+            .attr("y", (d, i) => i * 20 + 13)
+            .text(d => d.charAt(0).toUpperCase() + d.slice(1));
+}
 
-    // Create scales
+async function renderSixthChart() {
+    const margin = {top: 10, right: 20, bottom: 30, left: 50},
+        width = 1000 - margin.left - margin.right,
+        height = 800 - margin.top - margin.bottom;
+
+    // Load CSV data
+    const data = await d3.csv("https://ykorde2.github.io/data/heat-death-rate-vs-co2.csv");  // Update with the URL or path to your new CSV file
+    const year = 2015;  // Considering AnnualCO2Emissions in 2022
+
+    // Filter data for required years
+    console.log(data);  // Log raw data to the console
+    const data2021 = data.filter(d => d.Year == 2021);
+    const data2030 = data.filter(d => d.Year == 2030);
+    const data2015 = data.filter(d => d.Year == 2015);
+    console.log(data2021);  // Log data for 2021
+    console.log(data2030);  // Log data for 2030
+    console.log(data2015);  // Log data for 2015
+
+    // Create a mapping of entity codes to their respective data
+    const dataMap = {};
+
+    data2021.forEach(d => {
+        if (!dataMap[d.Code]) dataMap[d.Code] = {};
+        dataMap[d.Code].AnnualCO2Emissions = d.AnnualCO2Emissions;
+        dataMap[d.Code].Entity = d.Entity;
+    });
+
+    data2030.forEach(d => {
+        if (!dataMap[d.Code]) dataMap[d.Code] = {};
+        dataMap[d.Code].HeatDeath = d.HeatDeath;
+    });
+
+    data2015.forEach(d => {
+        if (!dataMap[d.Code]) dataMap[d.Code] = {};
+        dataMap[d.Code].Continent = d.Continent;
+    });
+
+    // Filter and prepare the final data
+    const filteredData = Object.keys(dataMap)
+        .map(code => ({ Code: code, ...dataMap[code] }))
+        .filter(d => d.Entity && d.AnnualCO2Emissions && d.HeatDeath && d.Continent);
+
+    console.log(filteredData);  // Log filtered data to the console
+
+    let svg = d3.select("#chart-4").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    // Add X axis with linear scale
     const x = d3.scaleLinear()
-        .domain([0, d3.max(data, d => +d.total)])
+        .domain([0, 40])  // Adjusted domain for linear scale
         .range([0, width]);
 
-    const y = d3.scaleBand()
-        .domain(groups)
-        .range([0, height])
-        .padding(0.1);
-
-    const color = d3.scaleOrdinal()
-        .domain(subgroups)
-        .range(d3.schemeTableau10);
-
+    const xTicks = d3.range(0, 41, 5);  // Tick values from 0 to 40 with a step of 5
     svg.append("g")
-        .attr("class", "x-axis")
-        .attr("transform", `translate(0,${height})`)
-        .call(d3.axisBottom(x).ticks(10).tickFormat(d => d + "%"));
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x)
+            .tickValues(xTicks)
+            .tickFormat(d => d + "T"));  // Format tick labels with "T" suffix
 
+    // Add Y axis
+    const y = d3.scaleLinear()
+        .domain([-80, 40])  // Adjust domain as necessary
+        .range([height, 0]);
     svg.append("g")
-        .attr("class", "y-axis")
-        .call(d3.axisLeft(y));
+        .call(d3.axisLeft(y).tickFormat(d => d + " %"));
 
-    // Stack data
-    const stackedData = d3.stack()
-        .keys(subgroups)
-        (data);
+    // Add a scale for bubble color
+    const myColor = d3.scaleOrdinal()
+        .domain(getContinentKeys())  // Define your function to get continent keys
+        .range(d3.schemeSet2);
 
-    // Tooltip
-    const tooltip = d3.select("body").append("div")
+    svg.append("line")
+        .attr("x1", 0)
+        .attr("x2", width)
+        .attr("y1", y(0))
+        .attr("y2", y(0))
+        .attr("stroke", "black")
+        .attr("stroke-width", 1);
+
+    // -1- Create a tooltip div that is hidden by default:
+    const tooltip = d3.select("#slide-4")
+        .append("div")
+        .style("opacity", 0)
         .attr("class", "tooltip")
-        .style("opacity", 0);
+        .style("background-color", "black")
+        .style("border-radius", "5px")
+        .style("padding", "10px")
+        .style("color", "white")
+        .style("width", "150px")
+        .style("height", "100px");
 
-    // Create bars
-    svg.append("g")
-        .selectAll("g")
-        .data(stackedData)
+    // Add dots
+    svg.append('g')
+        .selectAll("scatterplot-dot")
+        .data(filteredData)
         .enter()
-        .append("g")
-        .attr("fill", d => color(d.key))
-        .selectAll("rect")
-        .data(d => d)
-        .enter()
-        .append("rect")
-        .attr("y", d => y(d.data.entity))
-        .attr("x", d => x(d[0]))
-        .attr("width", d => x(d[1]) - x(d[0]))
-        .attr("height", y.bandwidth())
-        .on("mouseover", function(event, d) {
-            const total = d.data.total + "%";
+        .append("circle")
+        .attr("class", "bubbles")
+        .attr("cx", function (d) {
+            return x(Number(d.AnnualCO2Emissions));
+        })
+        .attr("cy", function (d) {
+            return y(Number(d.HeatDeath));
+        })
+        .attr("r", 5)  // Fixed bubble size, you can adjust or make dynamic based on data
+        .on("mouseover", function (event, d) {
             tooltip.transition()
                 .duration(200)
                 .style("opacity", .9);
-            tooltip.html(`<div class="tooltip-title">${d.data.entity}</div>
-                          Extreme Cold: ${d.data.extremeCold}%<br>
-                          Moderate Cold: ${d.data.moderateCold}%<br>
-                          Moderate Heat: ${d.data.moderateHeat}%<br>
-                          Extreme Heat: ${d.data.extremeHeat}%<br>
-                          <strong>Total: ${total}</strong>`)
-                .style("left", (event.pageX + 10) + "px")
-                .style("top", (event.pageY - 28) + "px");
+            tooltip.html(sixthChartTooltipHTML(d));
+            tooltip.style("left", (event.pageX + 28) + "px")
+                .style("top", (event.pageY) + "px");
         })
-        .on("mouseout", function() {
+        .on("mouseout", function (d) {
             tooltip.transition()
                 .duration(500)
                 .style("opacity", 0);
+        })
+        .style("fill", function (d) {
+            return myColor(d.Continent);
         });
+    renderLegend(svg, getContinentKeys(), width, myColor);
+    countryCodesToAnnotate().forEach(function (countryCode) {
+        for (let i = 0; i < filteredData.length; i++) {
+            if (filteredData[i].Code === countryCode) {
+                const countryData = filteredData[i];
+                renderSixthChartAnnotations(countryData, x(Number(countryData.AnnualCO2Emissions)), y(Number(countryData.HeatDeath)), margin);
+            }
+        }
+    });
+}
 
-    // Legend
-    const legend = svg.append("g")
-        .attr("transform", `translate(${width - 100},${0})`);
+function sixthChartTooltipHTML(d) {
+    return "<strong>Entity:</strong> " + d.Entity + "<br>"
+        + "<strong>Heat-related death rate:</strong> " + Number(d.HeatDeath).toFixed(2) + "%<br>"
+        + "<strong>Annual CO2 Emissions:</strong> " + d.AnnualCO2Emissions;
+}
 
-    legend.selectAll("rect")
-        .data(subgroups)
-        .enter()
-        .append("rect")
-        .attr("x", 0)
-        .attr("y", (d, i) => i * 20)
-        .attr("width", 18)
-        .attr("height", 18)
-        .attr("fill", color);
+function renderSixthChartAnnotations(d, x, y, margin) {
+    const computedDX = d.Entity === "France" ? -30 : 30;
+    const computedDY = d.Entity === "France" ? 30 : -30;
+    const annotations = [
+        {
+            note: {
+                label: "Annual CO2 Emissions: " + Math.round(d.AnnualCO2Emissions) + ", Heat Death: " + Math.round(d.HeatDeath) + "%",
+                lineType: "none",
+                bgPadding: { "top": 15, "left": 10, "right": 10, "bottom": 10 },
+                title: d.Entity,
+                orientation: "leftRight",
+                "align": "middle"
+            },
+            type: d3.annotationCallout,
+            subject: { radius: 30 },
+            x: x,
+            y: y,
+            dx: computedDX,
+            dy: computedDY
+        },
+    ];
+    const makeAnnotations = d3.annotation().annotations(annotations);
 
-    legend.selectAll("text")
-        .data(subgroups)
-        .enter()
-        .append("text")
-        .attr("x", 25)
-        .attr("y", (d, i) => i * 20 + 13)
-        .text(d => d.charAt(0).toUpperCase() + d.slice(1));
+    d3.select("svg")
+        .append("g")
+        .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")")
+        .attr("class", "annotation-group")
+        .call(makeAnnotations);
 }
