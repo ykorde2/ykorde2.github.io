@@ -848,7 +848,7 @@ function renderHeatDeathRateAnnotations(d, x, y, margin) {
         .call(makeAnnotations);
 }
 
-async function renderHeatDeathRateChart() {
+async function renderHeatDeathRateChart2() {
     const margin = { top: 20, right: 30, bottom: 40, left: 150 },
         width = 800 - margin.left - margin.right,
         height = 600 - margin.top - margin.bottom;
@@ -865,7 +865,7 @@ async function renderHeatDeathRateChart() {
             total: (+d.ExtremeCold + +d.ModerateCold + +d.ModerateHeat + +d.ExtremeHeat).toFixed(2)
         };
     });
-
+    console.log(data);
     const svg = d3.select("#chart-2")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
