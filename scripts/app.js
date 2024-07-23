@@ -1020,7 +1020,7 @@ async function renderSixthChart() {
 
     console.log(filteredData);  // Log filtered data to the console
 
-    let svg = d3.select("#chart-4").append("svg")
+    let svg = d3.select("#chart-6").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
@@ -1059,7 +1059,7 @@ async function renderSixthChart() {
         .attr("stroke-width", 1);
 
     // -1- Create a tooltip div that is hidden by default:
-    const tooltip = d3.select("#slide-4")
+    const tooltip = d3.select("#slide-6")
         .append("div")
         .style("opacity", 0)
         .attr("class", "tooltip")
