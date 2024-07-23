@@ -848,3 +848,122 @@ function renderHeatDeathRateAnnotations(d, x, y, margin) {
         .call(makeAnnotations);
 }
 
+async function renderHeatDeathRateChart() {
+    const margin = { top: 20, right: 30, bottom: 40, left: 150 },
+        width = 800 - margin.left - margin.right,
+        height = 600 - margin.top - margin.bottom;
+
+    const data = await d3.csv("https://ykorde2.github.io/data/deaths-temperature-gasparrini.csv", d => {
+        return {
+            entity: d.Entity,
+            code: d.Code,
+            year: +d.Year,
+            extremeCold: +d.ExtremeCold,
+            moderateCold: +d.ModerateCold,
+            moderateHeat: +d.ModerateHeat,
+            extremeHeat: +d.ExtremeHeat,
+            total: (+d.ExtremeCold + +d.ModerateCold + +d.ModerateHeat + +d.ExtremeHeat).toFixed(2)
+        };
+    });
+
+    const svg = d3.select("#chart-2")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const subgroups = ["extremeCold", "moderateCold", "moderateHeat", "extremeHeat"];
+
+    const groups = data.map(d => d.entity);
+
+    // Create scales
+    const x = d3.scaleLinear()
+        .domain([0, d3.max(data, d => +d.total)])
+        .range([0, width]);
+
+    const y = d3.scaleBand()
+        .domain(groups)
+        .range([0, height])
+        .padding(0.1);
+
+    const color = d3.scaleOrdinal()
+        .domain(subgroups)
+        .range(d3.schemeTableau10);
+
+    svg.append("g")
+        .attr("class", "x-axis")
+        .attr("transform", `translate(0,${height})`)
+        .call(d3.axisBottom(x).ticks(10).tickFormat(d => d + "%"));
+
+    svg.append("g")
+        .attr("class", "y-axis")
+        .call(d3.axisLeft(y));
+
+    // Stack data
+    const stackedData = d3.stack()
+        .keys(subgroups)
+        (data);
+
+    // Tooltip
+    const tooltip = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+
+    // Create bars
+    svg.append("g")
+        .selectAll("g")
+        .data(stackedData)
+        .enter()
+        .append("g")
+        .attr("fill", d => color(d.key))
+        .selectAll("rect")
+        .data(d => d)
+        .enter()
+        .append("rect")
+        .attr("y", d => y(d.data.entity))
+        .attr("x", d => x(d[0]))
+        .attr("width", d => x(d[1]) - x(d[0]))
+        .attr("height", y.bandwidth())
+        .on("mouseover", function(event, d) {
+            const total = d.data.total + "%";
+            tooltip.transition()
+                .duration(200)
+                .style("opacity", .9);
+            tooltip.html(`<div class="tooltip-title">${d.data.entity}</div>
+                          Extreme Cold: ${d.data.extremeCold}%<br>
+                          Moderate Cold: ${d.data.moderateCold}%<br>
+                          Moderate Heat: ${d.data.moderateHeat}%<br>
+                          Extreme Heat: ${d.data.extremeHeat}%<br>
+                          <strong>Total: ${total}</strong>`)
+                .style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY - 28) + "px");
+        })
+        .on("mouseout", function() {
+            tooltip.transition()
+                .duration(500)
+                .style("opacity", 0);
+        });
+
+    // Legend
+    const legend = svg.append("g")
+        .attr("transform", `translate(${width - 100},${0})`);
+
+    legend.selectAll("rect")
+        .data(subgroups)
+        .enter()
+        .append("rect")
+        .attr("x", 0)
+        .attr("y", (d, i) => i * 20)
+        .attr("width", 18)
+        .attr("height", 18)
+        .attr("fill", color);
+
+    legend.selectAll("text")
+        .data(subgroups)
+        .enter()
+        .append("text")
+        .attr("x", 25)
+        .attr("y", (d, i) => i * 20 + 13)
+        .text(d => d.charAt(0).toUpperCase() + d.slice(1));
+}
