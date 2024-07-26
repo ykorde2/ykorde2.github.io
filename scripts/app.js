@@ -865,6 +865,9 @@ async function renderHeatDeathRateChart2() {
             total: (+d.ExtremeCold + +d.ModerateCold + +d.ModerateHeat + +d.ExtremeHeat).toFixed(2)
         };
     });
+
+    data.sort((a, b) => b.total - a.total);
+
     console.log(data);
     const svg = d3.select("#chart-2")
         .append("svg")
