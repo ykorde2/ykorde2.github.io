@@ -930,7 +930,7 @@ async function renderHeatDeathRateChart2() {
             .attr("y", d => y(d.data.entity))
             .attr("x", d => x(d[0]))
             .attr("width", d => x(d[1]) - x(d[0]))
-            .attr("height", y.bandwidth())
+            .attr("height", y.bandwidth() + 50)
             .on("mouseover", function(event, d) {
                 const total = d.data.total + "%";
                 tooltip.transition()
