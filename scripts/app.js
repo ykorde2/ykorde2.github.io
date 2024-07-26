@@ -1,132 +1,4 @@
-// First Slide
-async function renderFirstChart() {
-    const margin = {top: 10, right: 20, bottom: 30, left: 50},
-        width = 1000 - margin.left - margin.right,
-        height = 800 - margin.top - margin.bottom;
-    const data = await d3.csv("https://rohitmukherjee.github.io/data/1-annual-working-hours-vs-gdp-per-capita-pwt.csv");
-    const year = 2015
-    const filteredData = data.filter(function (d) {
-        return d.year == year && d.total_population != "" && d.average_annual_hours_worked != "" && d.gdp_per_capita != "";
-    });
 
-    let svg = d3.select("#chart-1").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
-
-    // Add X axis
-    const x = d3.scaleLinear()
-        .domain([1000, 70000])
-        .range([0, width]);
-    svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x).tickFormat(d => d + " $/yr"));
-
-    // Add Y axis
-    const y = d3.scaleLinear()
-        .domain([1200, 2800])
-        .range([height, 0]);
-    svg.append("g")
-        .call(d3.axisLeft(y).tickFormat(d => d + " hr"));
-
-    // Add a scale for bubble size
-    const z = getBubbleSizeScale()
-
-    // Add a scale for bubble color
-    const myColor = d3.scaleOrdinal()
-        .domain(getContinentKeys())
-        .range(d3.schemeSet2);
-
-    // -1- Create a tooltip div that is hidden by default:
-    const tooltip = d3.select("#slide-1")
-        .append("div")
-        .style("opacity", 0)
-        .attr("class", "tooltip")
-        .style("background-color", "black")
-        .style("border-radius", "5px")
-        .style("padding", "10")
-        .style("color", "white")
-        .style("width", "150px")
-        .style("height", "50px")
-
-    // Add dots
-    svg.append('g')
-        .selectAll("scatterplot-dot")
-        .data(filteredData)
-        .enter()
-        .append("circle")
-        .attr("class", "bubbles")
-        .attr("cx", function (d) {
-            return x(Number(d.gdp_per_capita));
-        })
-        .attr("cy", function (d) {
-            return y(Number(d.average_annual_hours_worked));
-        })
-        .attr("id", function (d) {
-            return "bubble-" + d.code;
-        })
-        .attr("r", function (d) {
-            return z(Number(d.total_population));
-        })
-        .on("mouseover", function (event, d) {
-            tooltip.transition()
-                .duration(200)
-                .style("opacity", .9);
-            tooltip.html(firstChartTooltipHTML(d));
-            tooltip.style("left", (event.pageX) + "px")
-                .style("top", (event.pageY - 28) + "px")
-        })
-        .on("mouseout", function (d) {
-            tooltip.transition()
-                .duration(500)
-                .style("opacity", 0);
-        })
-        .style("fill", function (d) {
-            return myColor(d.continent);
-        });
-    renderLegend(svg, getContinentKeys(), width, myColor);
-    countryCodesToAnnotate().forEach(function (countryCode) {
-        for (let i = 0; i < filteredData.length; i++) {
-            if (filteredData[i].code === countryCode) {
-                const countryData = filteredData[i];
-                renderFirstChartAnnotations(countryData, x(Number(countryData.gdp_per_capita)), y(Number(countryData.average_annual_hours_worked)), margin);
-            }
-        }
-    })
-}
-
-function renderFirstChartAnnotations(d, x, y, margin) {
-    const computedDX = d.entity == "France" ? -30 : 30;
-    const computedDY = d.entity == "France" ? 30 : -30;
-    const annotations = [
-        {
-            note: {
-                label: "$" + Math.round(d.gdp_per_capita) + "/year, " + Math.round(d.average_annual_hours_worked) + " hrs/yr",
-                lineType: "none",
-                bgPadding: {"top": 15, "left": 10, "right": 10, "bottom": 10},
-                title: d.entity,
-                orientation: "leftRight",
-                "align": "middle"
-            },
-            type: d3.annotationCallout,
-            subject: {radius: 30},
-            x: x,
-            y: y,
-            dx: computedDX,
-            dy: computedDY
-        },
-    ];
-    const makeAnnotations = d3.annotation().annotations(annotations);
-
-    d3.select("svg")
-        .append("g")
-        .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")")
-        .attr("class", "annotation-group")
-        .call(makeAnnotations)
-}
 
 function renderSecondChartAnnotations(d, x, y, margin) {
     const computedDX = d.entity == "France" ? -30 : 30;
@@ -196,112 +68,6 @@ function firstChartTooltipHTML(object) {
 
 function countryCodesToAnnotate() {
     return ["CHN", "IND", "USA", "RUS", "KOR"]
-}
-
-// Second Slide
-async function renderSecondChart() {
-    const margin = {top: 10, right: 20, bottom: 30, left: 50},
-        width = 1000 - margin.left - margin.right,
-        height = 800 - margin.top - margin.bottom;
-    const data = await d3.csv("https://rohitmukherjee.github.io/data/3-productivity-vs-annual-hours-worked.csv");
-    const year = 2015
-    const filteredData = data.filter(function (d) {
-        return d.year == year && d.total_population != "" && d.average_annual_hours_worked != "" && d.productivity != "";
-    });
-
-    console.log(filteredData);
-
-    let svg = d3.select("#chart-2").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
-
-    // Add X axis
-    const x = d3.scaleLinear()
-        .domain([0, 100])
-        .range([0, width]);
-    svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x).tickFormat(d => d + " $/hr"));
-
-    // Add Y axis
-    const y = d3.scaleLinear()
-        .domain([1200, 2800])
-        .range([height, 0]);
-    svg.append("g")
-        .call(d3.axisLeft(y).tickFormat(d => d + " hr"));
-    const z = getBubbleSizeScale();
-
-    // Add a scale for bubble color
-    const myColor = d3.scaleOrdinal()
-        .domain(getContinentKeys())
-        .range(d3.schemeSet2);
-
-    // -1- Create a tooltip div that is hidden by default:
-    const tooltip = d3.select("#chart-2")
-        .append("div")
-        .style("opacity", 0)
-        .attr("class", "tooltip")
-        .style("background-color", "black")
-        .style("border-radius", "5px")
-        .style("color", "white")
-        .style("width", "150px")
-        .style("height", "50px")
-
-    // Add dots
-    svg.append('g')
-        .selectAll("dot")
-        .data(filteredData)
-        .enter()
-        .append("circle")
-        .attr("class", "bubbles")
-        .attr("id", function (d) {
-            return "bubble-" + d.code;
-        })
-        .attr("cx", function (d) {
-            return x(Number(d.productivity));
-        })
-        .attr("cy", function (d) {
-            return y(Number(d.average_annual_hours_worked));
-        })
-        .attr("r", function (d) {
-            return z(Number(d.total_population));
-        })
-        .style("fill", function (d) {
-            return myColor(d.continent);
-        })
-        // -3- Trigger the functions
-        .on("mouseover", function (event, d) {
-            tooltip.transition()
-                .duration(200)
-                .style("opacity", .9);
-            tooltip.html(secondChartTooltipHTML(d));
-            tooltip.style("left", (event.pageX) + "px")
-                .style("top", (event.pageY - 28) + "px")
-        })
-        .on("mouseout", function (d) {
-            tooltip.transition()
-                .duration(500)
-                .style("opacity", 0);
-        })
-        .style("fill", function (d) {
-            return myColor(d.continent);
-        });
-    renderLegend(svg, getContinentKeys(), width, myColor);
-    countryCodesToAnnotate().forEach(function (countryCode) {
-        for (let i = 0; i < filteredData.length; i++) {
-            if (filteredData[i].code === countryCode) {
-                const countryData = filteredData[i];
-                renderSecondChartAnnotations(countryData, x(Number(countryData.productivity)), y(Number(countryData.average_annual_hours_worked)), margin);
-            }
-        }
-    })
-}
-
-function secondChartTooltipHTML(object) {
-    return "<div>" + object.entity + "</div><div>$" + Math.round(object.productivity) + "\/hour</div><div>" + Math.round(object.average_annual_hours_worked) + " hrs worked yearly</div>";
 }
 
 // Fourth slide
@@ -449,7 +215,7 @@ function getEntities() {
 
 async function renderFifthChart() {
     const margin = {top: 10, right: 20, bottom: 30, left: 50},
-        width = 1000 - margin.left - margin.right,
+        width = 1200 - margin.left - margin.right,
         height = 800 - margin.top - margin.bottom;
     const data = await d3.csv("https://ykorde2.github.io/data/change-heat-deaths-gdp.csv");  // Update with the URL or path to your new CSV file
     const year = 2015;  // Considering GDP per capita in 2022
@@ -496,7 +262,7 @@ async function renderFifthChart() {
 
     // Add X axis
     const x = d3.scaleLog()
-        .domain([750, 120000])  // Adjust domain as necessary
+        .domain([700, 120000])  // Adjust domain as necessary
         .range([0, width])
         .base(10);
         const xTicks = [1000, 2000, 5000, 10000, 20000, 50000, 100000];
@@ -618,7 +384,7 @@ function renderFifthChartAnnotations(d, x, y, margin) {
 
 async function renderHeatDeathRateChart() {
     const margin = {top: 10, right: 20, bottom: 30, left: 50},
-        width = 1000 - margin.left - margin.right,
+        width = 1200 - margin.left - margin.right,
         height = 800 - margin.top - margin.bottom;
 
     const data = await d3.csv("https://ykorde2.github.io/data/change-heat-death-rate.csv");
@@ -733,7 +499,7 @@ function renderHeatDeathRateAnnotations(d, x, y, margin) {
 
 async function renderHeatDeathRateChart2() {
     const margin = {top: 10, right: 20, bottom: 30, left: 50},
-        width = 1000 - margin.left - margin.right,
+        width = 1200 - margin.left - margin.right,
         height = 800 - margin.top - margin.bottom;
 
 
@@ -872,7 +638,7 @@ async function renderHeatDeathRateChart2() {
 
 async function renderSixthChart() {
     const margin = {top: 10, right: 20, bottom: 30, left: 50},
-        width = 1000 - margin.left - margin.right,
+        width = 1200 - margin.left - margin.right,
         height = 800 - margin.top - margin.bottom;
 
     // Load CSV data
