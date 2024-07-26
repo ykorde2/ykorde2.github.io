@@ -914,7 +914,14 @@ async function renderHeatDeathRateChart2() {
         // Create a tooltip for displaying information on hover
         const tooltip = d3.select("body").append("div")
             .attr("class", "tooltip")
-            .style("opacity", 0);
+            .style("opacity", 0)
+            .attr("class", "tooltip")
+            .style("background-color", "black")
+            .style("border-radius", "5px")
+            .style("padding", "10px")
+            .style("color", "white")
+            .style("width", "150px")
+            .style("height", "100px");
     
         // Draw the bars for the stacked chart
         svg.append("g")
@@ -930,7 +937,7 @@ async function renderHeatDeathRateChart2() {
             .attr("y", d => y(d.data.entity))
             .attr("x", d => x(d[0]))
             .attr("width", d => x(d[1]) - x(d[0]))
-            .attr("height", y.bandwidth() + 50)
+            .attr("height", y.bandwidth())
             .on("mouseover", function(event, d) {
                 const total = d.data.total + "%";
                 tooltip.transition()
