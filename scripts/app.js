@@ -735,8 +735,8 @@ function renderFifthChartAnnotations(d, x, y, margin) {
 
 async function renderHeatDeathRateChart() {
     const margin = {top: 10, right: 20, bottom: 30, left: 50},
-        width = 800 - margin.left - margin.right,
-        height = 600 - margin.top - margin.bottom;
+        width = 1000 - margin.left - margin.right,
+        height = 800 - margin.top - margin.bottom;
 
     const data = await d3.csv("https://ykorde2.github.io/data/change-heat-death-rate.csv");
 
@@ -849,9 +849,10 @@ function renderHeatDeathRateAnnotations(d, x, y, margin) {
 }
 
 async function renderHeatDeathRateChart2() {
-    const margin = { top: 20, right: 30, bottom: 40, left: 150 },
-        width = 800 - margin.left - margin.right,
-        height = 600 - margin.top - margin.bottom;
+    const margin = {top: 10, right: 20, bottom: 30, left: 50},
+        width = 1000 - margin.left - margin.right,
+        height = 800 - margin.top - margin.bottom;
+
 
     const data = await d3.csv("https://ykorde2.github.io/data/deaths-temperature-gasparrini.csv", d => {
         return {
