@@ -2,6 +2,11 @@ function countryCodesToAnnotate() {
     return ["CHN", "IND", "USA", "RUS", "KOR"]
 }
 
+function getContinentKeys() {
+    return ["Asia", "Europe", "North America", "South America", "Africa", "Oceania"];
+}
+
+
 async function renderFifthChart() {
     const margin = {top: 10, right: 20, bottom: 30, left: 50},
         width = 1200 - margin.left - margin.right,
