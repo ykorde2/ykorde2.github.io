@@ -847,7 +847,7 @@ async function renderHeatDeathRateChart2() {
     
         // Add a legend to the chart
         const legend = svg.append("g")
-            .attr("transform", `translate(${width - 100},${0})`);
+            .attr("transform", `translate(${width - 100},${height - subgroups.length * 20 - 20})`);
     
         // Draw rectangles for the legend
         legend.selectAll("rect")
