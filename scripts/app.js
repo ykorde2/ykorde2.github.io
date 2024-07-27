@@ -1,6 +1,6 @@
 
 function countryCodesToAnnotate() {
-    return ["CHN", "IND", "USA", "RUS", "KOR"]
+    return ["RUS", "AUS"]
 }
 
 function getContinentKeys() {
