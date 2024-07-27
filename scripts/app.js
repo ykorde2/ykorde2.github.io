@@ -619,13 +619,16 @@ function renderHeatDeathCO2ChartAnnotations(d, x, y, margin) {
 
     switch (d.Entity) {
         case "Russia":
-            computedDX = -30;
-            computedDY = 30;
+            computedDX = 0;
+            computedDY = 45;
             break;
         case "United States":
+            computedDX = 30;
+            computedDY = 30;
+            break;
+        case "Kuwait":
             computedDX = -30;
             computedDY = -30;
-            break;
         default:
             computedDX = 30;
             computedDY = -30;
