@@ -527,10 +527,9 @@ async function renderHeatDeathCO2Chart() {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // Add X axis with linear scale
-    const x = d3.scaleLog()
+    const x = d3.scaleSqrt()
         .domain([0, 40])  // Adjusted domain for linear scale
-        .range([0, width])
-        .base(10);
+        .range([0, width]);
 
     const xTicks = d3.range(0, 41, 5);  // Tick values from 0 to 40 with a step of 5
     svg.append("g")
