@@ -1,6 +1,6 @@
 
 function countryCodesToAnnotate() {
-    return ["RUS", "AUS"]
+    return ["RUS", "USA", "KWT"]
 }
 
 function getContinentKeys() {
@@ -219,7 +219,7 @@ async function renderHeatDeathRateChart() {
         .domain([-300, 100])
         .range([height, 0]);
     svg.append("g")
-        .call(d3.axisLeft(y).tickFormat(d => d + " rate"));
+        .call(d3.axisLeft(y).tickFormat(d => d + " %"));
 
     const firstCountryData = filteredData.filter(d => d.Entity === entities[0]);
     const line = svg
@@ -431,8 +431,21 @@ function heatDeathGDPChartTooltipHTML(d) {
 }
 
 function renderHeatDeathGDPChartAnnotations(d, x, y, margin) {
-    const computedDX = d.Entity === "Russia" ? -30 : 30;
-    const computedDY = d.Entity === "Russia" ? 30 : -30;
+    switch (d.Entity) {
+        case "Russia":
+            computedDX = -30;
+            computedDY = 30;
+            break;
+        case "United States":
+            computedDX = -30;
+            computedDY = -30;
+            break;
+        default:
+            computedDX = 30;
+            computedDY = -30;
+            break;
+    }
+    
     const annotations = [
         {
             note: {
@@ -602,8 +615,22 @@ function heatDeathCO2ChartTooltipHTML(d) {
 }
 
 function renderHeatDeathCO2ChartAnnotations(d, x, y, margin) {
-    const computedDX = d.Entity === "France" ? -30 : 30;
-    const computedDY = d.Entity === "France" ? 30 : -30;
+    let computedDX, computedDY;
+
+    switch (d.Entity) {
+        case "Russia":
+            computedDX = -30;
+            computedDY = 30;
+            break;
+        case "United States":
+            computedDX = -30;
+            computedDY = -30;
+            break;
+        default:
+            computedDX = 30;
+            computedDY = -30;
+            break;
+    }
     const annotations = [
         {
             note: {
