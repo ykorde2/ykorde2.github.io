@@ -1,6 +1,6 @@
 
 function countryCodesToAnnotate() {
-    return ["RUS", "USA", "KWT"]
+    return ["RUS", "USA", "KWT", "PAK"]
 }
 
 function getContinentKeys() {
@@ -66,7 +66,7 @@ async function renderTemperatureDeathRateChart() {
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
+        .attr("transform", `translate(${margin.left + 100},${margin.top})`); // Push chart to the right by 100 pixels
 
         // Define the subgroups
         const subgroups = ["extremeCold", "moderateCold", "moderateHeat", "extremeHeat"];
@@ -438,13 +438,13 @@ function renderHeatDeathGDPChartAnnotations(d, x, y, margin) {
             break;
         case "United States":
             computedDX = 30;
-            computedDY = 30;
+            computedDY = 0;
             break;
         case "Kuwait":
             computedDX = -30;
             computedDY = -30;
         default:
-            computedDX = 30;
+            computedDX = -30;
             computedDY = -30;
             break;
     }
@@ -527,9 +527,10 @@ async function renderHeatDeathCO2Chart() {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // Add X axis with linear scale
-    const x = d3.scaleLinear()
+    const x = d3.scaleLog()
         .domain([0, 40])  // Adjusted domain for linear scale
-        .range([0, width]);
+        .range([0, width])
+        .base(10);
 
     const xTicks = d3.range(0, 41, 5);  // Tick values from 0 to 40 with a step of 5
     svg.append("g")
@@ -622,18 +623,18 @@ function renderHeatDeathCO2ChartAnnotations(d, x, y, margin) {
 
     switch (d.Entity) {
         case "Russia":
-            computedDX = 45;
-            computedDY = 0;
+            computedDX = -30;
+            computedDY = 30;
             break;
         case "United States":
             computedDX = 30;
-            computedDY = 30;
+            computedDY = 0;
             break;
         case "Kuwait":
             computedDX = -30;
             computedDY = -30;
         default:
-            computedDX = 30;
+            computedDX = -30;
             computedDY = -30;
             break;
     }
