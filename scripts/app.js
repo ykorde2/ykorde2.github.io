@@ -4,37 +4,37 @@ function countryCodesToAnnotate() {
 }
 
 function renderLegend(svg, continentKeys, width, myColor) {
-    // Add one dot in the legend for each name.
-    svg.selectAll("legend-dots")
-        .data(continentKeys)
-        .enter()
-        .append("circle")
-        .attr("cx", width - 100)
-        .attr("cy", function (d, i) {
-            return 50 + i * 25
-        }) // 100 is where the first dot appears. 25 is the distance between dots
-        .attr("r", 2)
-        .style("fill", function (d) {
-            return myColor(d)
-        })
+    // Define constants for spacing and positioning
+    const circleRadius = 2;
+    const initialYPosition = 50;
+    const ySpacing = 25;
+    const labelOffsetX = 8;
 
-    svg.selectAll("legend-labels")
+    // Create a group for legend items for better structure
+    const legendGroup = svg.selectAll("legend-item")
         .data(continentKeys)
         .enter()
-        .append("text")
-        .attr("x", width + 8 - 100)
-        .attr("y", function (d, i) {
-            return 50 + i * 25
-        }) // 100 is where the first dot appears. 25 is the distance between dots
-        .style("fill", function (d) {
-            return myColor(d)
-        })
-        .text(function (d) {
-            return d
-        })
+        .append("g")
+        .attr("class", "legend-item")
+        .attr("transform", (d, i) => `translate(0, ${initialYPosition + i * ySpacing})`);
+
+    // Append circles to the legend group
+    legendGroup.append("circle")
+        .attr("cx", width - 100)
+        .attr("cy", 0) // Adjusted to be within the group's transform
+        .attr("r", circleRadius)
+        .style("fill", myColor);
+
+    // Append text labels to the legend group
+    legendGroup.append("text")
+        .attr("x", width - 100 + labelOffsetX)
+        .attr("y", 0) // Adjusted to be within the group's transform
+        .style("fill", myColor)
+        .text(d => d)
         .attr("text-anchor", "left")
-        .style("alignment-baseline", "middle")
+        .style("alignment-baseline", "middle");
 }
+
 
 function getContinentKeys() {
     return ["Asia", "Europe", "North America", "South America", "Africa", "Oceania"];
