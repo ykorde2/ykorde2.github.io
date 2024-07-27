@@ -215,8 +215,8 @@ async function renderHeatDeathRateChart() {
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x).tickFormat(d3.format("d")));
 
-    const y = d3.scaleSqrt()
-        .domain([-300, 100])
+    const y = d3.scaleLinear()
+        .domain([-300, 150])
         .range([height, 0]);
     svg.append("g")
         .call(d3.axisLeft(y).tickFormat(d => d + " %"));
@@ -431,15 +431,18 @@ function heatDeathGDPChartTooltipHTML(d) {
 }
 
 function renderHeatDeathGDPChartAnnotations(d, x, y, margin) {
-    switch (d.Entity) {
+     switch (d.Entity) {
         case "Russia":
             computedDX = -30;
             computedDY = 30;
             break;
         case "United States":
+            computedDX = 30;
+            computedDY = 30;
+            break;
+        case "Kuwait":
             computedDX = -30;
             computedDY = -30;
-            break;
         default:
             computedDX = 30;
             computedDY = -30;
@@ -619,8 +622,8 @@ function renderHeatDeathCO2ChartAnnotations(d, x, y, margin) {
 
     switch (d.Entity) {
         case "Russia":
-            computedDX = 0;
-            computedDY = 45;
+            computedDX = 45;
+            computedDY = 0;
             break;
         case "United States":
             computedDX = 30;
