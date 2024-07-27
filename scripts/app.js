@@ -372,7 +372,7 @@ async function renderHeatDeathGDPChart() {
         .attr("stroke-width", 1);
 
     // -1- Create a tooltip div that is hidden by default:
-    const tooltip = d3.select("#slide-5")
+    const tooltip = d3.select("#slide-4")
         .append("div")
         .style("opacity", 0)
         .attr("class", "tooltip")
@@ -543,7 +543,7 @@ async function renderHeatDeathCO2Chart() {
         .attr("stroke-width", 1);
 
     // -1- Create a tooltip div that is hidden by default:
-    const tooltip = d3.select("#slide-6")
+    const tooltip = d3.select("#slide-5")
         .append("div")
         .style("opacity", 0)
         .attr("class", "tooltip")
