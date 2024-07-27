@@ -37,17 +37,9 @@ function renderLegend(svg, continentKeys, width, myColor) {
 
 
 function getContinentKeys() {
-    return ["Asia", "Europe", "North America", "South America", "Africa", "Oceania"];
+    return ["Africa", "Asia", "Europe", "North America", "Oceania", "South America"];
 }
 
-function getEntities() {
-    return ["Argentina", "Australia", "Austria", "Bangladesh", "Barbados", "Belgium", "Brazil", "Bulgaria", "Cambodia", "Canada", "Chile", "China",
-        "Colombia", "Costa Rica", "Croatia", "Cyprus", "Czechia", "Denmark", "Ecuador", "Estonia", "Finland", "France", "Germany", "Greece", "Hong Kong",
-        "Hungary", "Iceland", "India", "Indonesia", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Latvia", "Lithuania", "Luxembourg", "Malaysia", "Malta",
-        "Mexico", "Myanmar", "Netherlands", "New Zealand", "Nigeria", "Norway", "Pakistan", "Peru", "Philippines", "Poland", "Portugal", "Romania", "Russia",
-        "Saint Lucia", "Singapore", "Slovakia", "Slovenia", "South Africa", "South Korea", "Spain", "Sri Lanka",
-        "Sweden", "Switzerland", "Taiwan", "Thailand", "Trinidad and Tobago", "Turkey", "United Kingdom", "United States", "Uruguay", "Venezuela", "Vietnam"]
-}
 
 async function renderFifthChart() {
     const margin = {top: 10, right: 20, bottom: 30, left: 50},
@@ -118,7 +110,7 @@ async function renderFifthChart() {
     // Add a scale for bubble color
     const myColor = d3.scaleOrdinal()
         .domain(getContinentKeys())  // Define your function to get continent keys
-        .range(d3.schemeSet2);
+        .range(d3.schemeSet1);
 
     svg.append("line")
         .attr("x1", 0)
@@ -246,7 +238,7 @@ async function renderHeatDeathRateChart() {
 
     const myColor = d3.scaleOrdinal()
         .domain(entities)
-        .range(d3.schemeSet2);
+        .range(d3.schemeSet1);
 
     const x = d3.scaleLinear()
         .domain([2030, 2090])
@@ -379,10 +371,10 @@ async function renderHeatDeathRateChart2() {
             .range([0, height])
             .padding(0.1);
     
-        // Define the color scale using d3.schemeSet2
+        // Define the color scale using d3.schemeSet1
         const color = d3.scaleOrdinal()
             .domain(subgroups)
-            .range(d3.schemeSet2);
+            .range(d3.schemeSet1);
     
         // Add the x-axis to the SVG
         svg.append("g")
@@ -544,7 +536,7 @@ async function renderSixthChart() {
     // Add a scale for bubble color
     const myColor = d3.scaleOrdinal()
         .domain(getContinentKeys())  // Define your function to get continent keys
-        .range(d3.schemeSet2);
+        .range(d3.schemeSet1);
 
     svg.append("line")
         .attr("x1", 0)
