@@ -66,7 +66,7 @@ async function renderTemperatureDeathRateChart() {
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
-        .attr("transform", `translate(${margin.left + 100},${margin.top})`); // Push chart to the right by 100 pixels
+        .attr("transform", `translate(${margin.left + 50},${margin.top})`); // Push chart to the right by 50 pixels
 
         // Define the subgroups
         const subgroups = ["extremeCold", "moderateCold", "moderateHeat", "extremeHeat"];
@@ -155,7 +155,7 @@ async function renderTemperatureDeathRateChart() {
     
         // Add a legend to the chart
         const legend = svg.append("g")
-            .attr("transform", `translate(${width - 200},${height - subgroups.length * 20 - 20})`);
+            .attr("transform", `translate(${width - 150},${height - subgroups.length * 20 - 20})`);
     
         // Draw rectangles for the legend
         legend.selectAll("rect")
