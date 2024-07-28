@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CS416 Narrative Visualization Project: Rohit Mukherjee</title>
+    <title>Yash Korde CS 416 Narrative Visualization Project</title>
     <link rel="stylesheet" href="styles/app.css">
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://d3js.org/d3.v7.10.3.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v3.1.0.min.js"></script>
     <script src="scripts/app.js"></script>
     <script src="https://unpkg.com/d3-svg-annotation@2.5.1/d3-annotation.min.js"></script>
 
@@ -13,48 +13,29 @@
 <body onload='renderTemperatureDeathRateChart()'>
 <div class="container">
     <div id="slide-1">
-        <h2>Annual working hours vs. GDP per capita</h2>
+        <h2>Share of deaths from all causes attributed to cold or heat</h2>
         <ul>
-            <li class="font-size-lg mt-10"> Workers in richer countries
-                tend to work fewer hours than
-                workers in poorer
-                countries.
+            <li class="font-size-lg mt-10"> Most temperature-related deaths occur during "moderately cold" conditions, not during extreme cold or hot weather, due to the extended time people spend in these temperatures.
             </li>
-            <li class="font-size-lg mt-10"> This is usually because
-                wealthier
-                countries have economies that enable workers to
-                produce more value for
-                each hour of work.
+            <li class="font-size-lg mt-10"> In the UK, temperatures of 10°C to 15°C are associated with higher mortality risk, even though they are perceived as mild or "nice summer days."
             </li>
-            <li class="font-size-lg mt-10"> Higher productivity per hour
-                provides
-                workers with higher incomes and allows them
-                to work shorter
-                hours.
+            <li class="font-size-lg mt-10"> Sub-optimal temperatures can lead to premature deaths from conditions such as cardiovascular disease, kidney disease, respiratory infections, and diabetes.
             </li>
-            <li class="font-size-lg mt-10">This data makes us rethink our
-                notions of economic progress over the last century,
-                and the nature of
-                inequality between countries.
+            <li class="font-size-lg mt-10"> A study by Antonio Gasparrini et al. in The Lancet shows that "moderate cold" is the leading cause of temperature-related deaths worldwide, affecting countries from the UK to Brazil.
             </li>
-            <li class="font-size-lg mt-10">The vertical axis shows the
-                <i>average hours</i> worked per year
-                by a resident of the country <i>per year</i>. The horizontal axis shows the <i>GDP per capita</i>
+            <li class="font-size-lg mt-10"> Awareness and adaptation strategies should focus on the health risks of moderate cold, which are often underestimated compared to extreme weather conditions.
             </li>
-            <li class="font-size-lg mt-30">Try hovering over some
-                countries
-                and
-                you should see the <b>total annual hours worked</b>, along
-                with their <b>GDP per capita</b>:
-                </span></li>
+            <li class="font-size-lg mt-30">
+                Below is a chart depicting mortality risk attributable to high and low ambient temperature. Hover over each bar to observe the percentage of deaths attributable to each gradiant of sub-optimal temperature.
+            </li>
         </ul>
         <div id="chart-2">
         </div>
 
     </div>
     <p>
-        <a class="btn btn-primary btn-s" href="index.html" role="button">Previous</a>
-        <a class="btn btn-primary btn-s" href="scene3.html" role="button">Next</a>
+        <a href="index.html">Previous</a>
+        <a href="scene3.html">Next</a>
     </p>
 </div>
 </body>
