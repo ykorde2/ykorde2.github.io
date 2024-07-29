@@ -377,7 +377,7 @@ async function renderHeatDeathGDPChart() {
         .style("position", "absolute")
         .style("text-align", "center")
         .style("width", "100px")
-        .style("height", "80px")
+        .style("height", "120px")
         .style("padding", "2px")
         .style("font", "12px sans-serif")
         .style("background", "lightsteelblue")
@@ -455,7 +455,7 @@ function renderHeatDeathGDPChartAnnotations(d, x, y, margin) {
     const annotations = [
         {
             note: {
-                label: "GDP: $" + Math.round(d.GDP) + ", Heat Death: " + Math.round(d.HeatDeath) + "%",
+                label: "GDP: $" + Math.round(d.GDP) + ", Heat Death Change: " + Math.round(d.HeatDeath) + "%",
                 lineType: "none",
                 bgPadding: { "top": 15, "left": 10, "right": 10, "bottom": 10 },
                 title: d.Entity,
@@ -567,7 +567,7 @@ async function renderHeatDeathCO2Chart() {
         .style("position", "absolute")
         .style("text-align", "center")
         .style("width", "100px")
-        .style("height", "80px")
+        .style("height", "120px")
         .style("padding", "2px")
         .style("font", "12px sans-serif")
         .style("background", "lightsteelblue")
@@ -646,7 +646,7 @@ function renderHeatDeathCO2ChartAnnotations(d, x, y, margin) {
     const annotations = [
         {
             note: {
-                label: "Annual CO2 Emissions: " + Math.round(d.AnnualCO2Emissions) + " T, Heat Death: " + Math.round(d.HeatDeath) + "%",
+                label: "Annual CO2 Emissions: " + Math.round(d.AnnualCO2Emissions) + " T, Heat Death Change: " + Math.round(d.HeatDeath) + "%",
                 lineType: "none",
                 bgPadding: { "top": 15, "left": 10, "right": 10, "bottom": 10 },
                 title: d.Entity,
