@@ -377,7 +377,7 @@ async function renderHeatDeathGDPChart() {
         .style("position", "absolute")
         .style("text-align", "center")
         .style("width", "100px")
-        .style("height", "120px")
+        .style("height", "100px")
         .style("padding", "2px")
         .style("font", "12px sans-serif")
         .style("background", "lightsteelblue")
@@ -443,9 +443,6 @@ function renderHeatDeathGDPChartAnnotations(d, x, y, margin) {
             computedDX = 0;
             computedDY = 90;
             break;
-        case "Kuwait":
-            computedDX = -30;
-            computedDY = -30;
         default:
             computedDX = -30;
             computedDY = -30;
@@ -567,7 +564,7 @@ async function renderHeatDeathCO2Chart() {
         .style("position", "absolute")
         .style("text-align", "center")
         .style("width", "100px")
-        .style("height", "120px")
+        .style("height", "100px")
         .style("padding", "2px")
         .style("font", "12px sans-serif")
         .style("background", "lightsteelblue")
@@ -636,11 +633,12 @@ function renderHeatDeathCO2ChartAnnotations(d, x, y, margin) {
             computedDY = 30;
             break;
         case "Kuwait":
-            computedDX = 0;
-            computedDY = -30;
+                computedDX = -30;
+                computedDY = -30;
+                break;
         default:
-            computedDX = 0;
-            computedDY = -45;
+            computedDX = 30;
+            computedDY = -30;
             break;
     }
     const annotations = [
