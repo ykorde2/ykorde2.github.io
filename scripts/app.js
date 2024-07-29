@@ -438,7 +438,7 @@ function renderHeatDeathGDPChartAnnotations(d, x, y, margin) {
             break;
         case "United States":
             computedDX = 30;
-            computedDY = 0;
+            computedDY = 60;
             break;
         case "Kuwait":
             computedDX = -30;
@@ -627,14 +627,14 @@ function renderHeatDeathCO2ChartAnnotations(d, x, y, margin) {
             break;
         case "United States":
             computedDX = 30;
-            computedDY = 0;
+            computedDY = -30;
             break;
         case "Kuwait":
-            computedDX = -30;
+            computedDX = 30;
             computedDY = -30;
         default:
             computedDX = -30;
-            computedDY = -30;
+            computedDY = 0;
             break;
     }
     const annotations = [
