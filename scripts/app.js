@@ -438,7 +438,7 @@ function renderHeatDeathGDPChartAnnotations(d, x, y, margin) {
             break;
         case "United States":
             computedDX = 0;
-            computedDY = 60;
+            computedDY = 90;
             break;
         case "Kuwait":
             computedDX = -30;
@@ -614,7 +614,7 @@ async function renderHeatDeathCO2Chart() {
 function heatDeathCO2ChartTooltipHTML(d) {
     return "<strong>Entity:</strong> " + d.Entity + "<br>"
         + "<strong>Heat-related death rate:</strong> " + Number(d.HeatDeath).toFixed(2) + "%<br>"
-        + "<strong>Annual CO2 Emissions:</strong> " + d.AnnualCO2Emissions;
+        + "<strong>Annual CO2 Emissions (T):</strong> " + Number(d.AnnualCO2Emissions).toFixed(6);
 }
 
 function renderHeatDeathCO2ChartAnnotations(d, x, y, margin) {
@@ -634,7 +634,7 @@ function renderHeatDeathCO2ChartAnnotations(d, x, y, margin) {
             computedDY = -30;
         default:
             computedDX = 0;
-            computedDY = -30;
+            computedDY = -45;
             break;
     }
     const annotations = [
