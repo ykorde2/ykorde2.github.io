@@ -634,7 +634,7 @@ function renderHeatDeathCO2ChartAnnotations(d, x, y, margin) {
             break;
         case "Kuwait":
                 computedDX = -30;
-                computedDY = -30;
+                computedDY = -60;
                 break;
         default:
             computedDX = 30;
