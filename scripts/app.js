@@ -437,8 +437,8 @@ function renderHeatDeathGDPChartAnnotations(d, x, y, margin) {
             computedDY = 30;
             break;
         case "United States":
-            computedDX = -15;
-            computedDY = 45;
+            computedDX = 0;
+            computedDY = 15;
             break;
         case "Kuwait":
             computedDX = -30;
@@ -630,17 +630,17 @@ function renderHeatDeathCO2ChartAnnotations(d, x, y, margin) {
             computedDY = 30;
             break;
         case "Kuwait":
-            computedDX = 0;
-            computedDY = 30;
+            computedDX = -30;
+            computedDY = -30;
         default:
-            computedDX = 0;
-            computedDY = 30;
+            computedDX = -30;
+            computedDY = -30;
             break;
     }
     const annotations = [
         {
             note: {
-                label: "Annual CO2 Emissions: " + Math.round(d.AnnualCO2Emissions) + ", Heat Death: " + Math.round(d.HeatDeath) + "%",
+                label: "Annual CO2 Emissions: " + Math.round(d.AnnualCO2Emissions) + " T, Heat Death: " + Math.round(d.HeatDeath) + "%",
                 lineType: "none",
                 bgPadding: { "top": 15, "left": 10, "right": 10, "bottom": 10 },
                 title: d.Entity,
