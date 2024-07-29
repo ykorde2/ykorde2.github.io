@@ -560,15 +560,15 @@ async function renderHeatDeathCO2Chart() {
 
     // -1- Create a tooltip div that is hidden by default:
     const tooltip = d3.select("#slide-5")
-        .append("div")
         .style("opacity", 0)
-        .attr("class", "tooltip")
         .style("background-color", "black")
         .style("border-radius", "5px")
         .style("padding", "10px")
         .style("color", "white")
         .style("width", "150px")
-        .style("height", "100px");
+        .style("height", "100px")
+        .style("position", "absolute")
+        .style("text-align", "center");
 
     // Add dots
     svg.append('g')
